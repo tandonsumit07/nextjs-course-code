@@ -1,34 +1,62 @@
-import { Fragment } from 'react';
-import Head from 'next/head';
+import {useRef} from 'react'
 
-import FeaturedPosts from '../components/home-page/featured-posts';
-import Hero from '../components/home-page/hero';
-import { getFeaturedPosts } from '../lib/posts-util';
+function HomePage() {
+  
+  const emailInputRef = useRef();
+  const feedbackInputRef = useRef();
 
-function HomePage(props) {
+  function handleSubmit(event){
+    event.preventDefault();
+    const enterEmail = emailInputRef.current.value;
+    const enterFeedback = feedbackInputRef.current.value;
+
+    const requestBody = {
+      email: enterEmail,
+      feedback: enterFeedback
+    }
+
+    fetch('/api/feedback',{
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers:{
+        'Content-Type':'application/json'
+      }
+    }).then(response => response.json()).then((data) => console.log(data));
+
+    fetch('/api/feedback',{
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers:{
+        'Content-Type':'application/json'
+      }
+    }).then(response => response.json()).then((data) => console.log(data));
+
+  }
+  
   return (
-    <Fragment>
-      <Head>
-        <title>Max' Blog</title>
-        <meta
-          name='description'
-          content='I post about programming and web development.'
-        />
-      </Head>
-      <Hero />
-      <FeaturedPosts posts={props.posts} />
-    </Fragment>
+    
+    <div>
+      <form onSubmit={handleSubmit}>
+      <h1>The Home Page</h1>
+      <div>
+      <labe htmlFor ="email">Email</labe>
+      <input type="email" name="email" ref={emailInputRef} />
+      </div>
+      <div>
+      <labe htmlFor ="feedback">Feedback</labe>
+      <textarea name="feedback" rows="5" ref={feedbackInputRef} ></textarea>
+      </div>
+      <br/>
+      <div>
+        <button>
+          Send Feedback
+        </button>
+      </div>
+      </form>
+    </div>
+    
+    
   );
-}
-
-export function getStaticProps() {
-  const featuredPosts = getFeaturedPosts();
-
-  return {
-    props: {
-      posts: featuredPosts,
-    },
-  };
 }
 
 export default HomePage;
