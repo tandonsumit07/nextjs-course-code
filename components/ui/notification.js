@@ -1,5 +1,3 @@
-import ReactDOM from 'react-dom';
-
 import classes from './notification.module.css';
 
 function Notification(props) {
@@ -15,14 +13,17 @@ function Notification(props) {
     statusClasses = classes.error;
   }
 
-  const cssClasses = `${classes.notification} ${statusClasses}`;
+  if (status === 'pending') {
+    statusClasses = classes.pending;
+  }
 
-  return ReactDOM.createPortal(
-    <div className={cssClasses}>
+  const activeClasses = `${classes.notification} ${statusClasses}`;
+
+  return (
+    <div className={activeClasses}>
       <h2>{title}</h2>
       <p>{message}</p>
-    </div>,
-    document.getElementById('notifications')
+    </div>
   );
 }
 
