@@ -1,6 +1,8 @@
+
+
 import { Fragment } from "react";
-import Hero from "../components/home-page/hero";
-import FeaturedPost from "../components/home-page/featured-posts";
+import PostItem from '../../components/posts/posts-item';
+import {useRouter }  from 'next/router'  
 
 const DUMMY_POSTS = [{
   slug: 'getting-started-nextjs',
@@ -18,13 +20,19 @@ const DUMMY_POSTS = [{
   date: '2022-02-10'
 
 }];
-function HomePage(){
+export default function PostDetailPage(){
+
+  const router = useRouter();
+  const { slug } = router.query;
+  
+  const post = DUMMY_POSTS.find((post) => post.slug === slug)
+  console.log("post", post)
   return (
     <Fragment>
-     <Hero />
-     <FeaturedPost posts= {DUMMY_POSTS} />
+      <h1>
+        Blog Detail !!!
+      </h1>
+      <PostItem key={post.slug} post = {post} />
     </Fragment>
   );
 }
-
-export default HomePage;
