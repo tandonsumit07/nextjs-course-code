@@ -5,16 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "export": "next export"
+    "start": "next start"
   },
   "dependencies": {
-    "gray-matter": "^4.0.2",
-    "mongodb": "^3.6.4",
-    "next": "10.0.6",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
-    "react-markdown": "^5.0.3",
-    "react-syntax-highlighter": "^15.4.3"
+    "bcryptjs": "^3.0.3",
+    "mongodb": "^7.0.0",
+    "next": "^13.5.3",
+    "next-auth": "^4.24.13",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
