@@ -1,64 +1,65 @@
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import classes from './auth-form.module.css';
 import {signIn} from 'next-auth/react'
-import { redirect } from 'next/dist/server/api-utils';
-
-
-
-async function createUser(email, password){
-  const result = await fetch('/api/auth/signup', {
-
-    method: 'POST',
-    body: JSON.stringify({
-      email,
-      password
-    }),
-    headers: {'Content-Type': 'application/json' }
-  })
-
-  if(!result.ok){
-    throw new Error('Something went wrong');
-  }
-  return result;
-}
 
 function AuthForm() {
-  const emailInputRef = useRef('email');
-  const passwordInputRef = useRef('password');
-
   const [isLogin, setIsLogin] = useState(true);
 
-  function switchAuthModeHandler() {
-    setIsLogin((prevState) => !prevState);
+  const emailInputRef = useRef()
+  const passwordInputRef = useRef();
+
+  async function createUser(email, password){
+    const response = await fetch('/api/auth/signup',{
+        method:'POST',
+        headers: { 
+         'Content-Type':  'application/json'
+        },
+        body:JSON.stringify({email: email, password: password})
+    })
+
+    const data = await response.json();
+    if(!response.ok){
+      throw new Error(data.message);
+    }
+
+    return data;
   }
 
-  async function submitHandler(event){
+  async function handleSubmit(event){
     event.preventDefault();
-    if(isLogin){
-      const result = await signIn('credentials', {
-        redirect: false,
-        email: emailInputRef.current.value,
-        password: passwordInputRef.current.value
 
-      });
-      console.log(result);
-    }
-    else{
-      try {
-          const result = await createUser(emailInputRef.current.value, passwordInputRef.current.value);
-          console.log(result);
+    const enteredEmailInput = emailInputRef.current.value;
+    const enteredPasswordInput = passwordInputRef.current.value;
+
+    if(isLogin){
+     const result = await signIn('credentials', 
+        {redirect: false,
+         email: enteredEmailInput,
+         password:  enteredPasswordInput
+        });
+
+      console.log("result", result);
+    }else{
+      try{
+        const result = await createUser(enteredEmailInput, enteredPasswordInput);
+        console.log(result);
       }catch(error){
-          console.log(error);
+        console.log(error);
       }
 
     }
+  }
 
+  function switchAuthModeHandler() {
+    setIsLogin((prevState) => !prevState);
+
+   
   }
 
   return (
     <section className={classes.auth}>
       <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
-      <form onSubmit={submitHandler}>
+      <form onSubmit={handleSubmit}>
         <div className={classes.control}>
           <label htmlFor='email'>Your Email</label>
           <input type='email' id='email' required ref={emailInputRef} />

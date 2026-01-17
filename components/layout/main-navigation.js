@@ -1,13 +1,9 @@
 import Link from 'next/link';
-import {useSession} from 'next-auth/react'
+
 import classes from './main-navigation.module.css';
 
 function MainNavigation() {
-  const [session, loading] = useSession();
-
-  console.log("loading", loading);
-  console.log("session", session);
-   return (
+  return (
     <header className={classes.header}>
       <Link href="/">
         <div className={classes.logo}>Next Auth</div>
